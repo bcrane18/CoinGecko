@@ -2,18 +2,61 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>CMC Live Marquee</title>
-    <script type="text/javascript" src="https://files.coinmarketcap.com/static/widget/coinMarquee.js"></script>
+    <title>Auto-Refreshing CoinMarketCap Widget</title>
+    <style>
+      body {
+        background-color: #121212;
+        color: #ffffff;
+        font-family: sans-serif;
+        text-align: center;
+        padding: 2rem;
+      }
+    </style>
   </head>
   <body>
-    <h2>Live Crypto Prices (CoinMarketCap)</h2>
+    <h2>Live Bitcoin Stats (auto-refresh every 10s)</h2>
 
-    <div id="coinmarketcap-widget-marquee"
-         coins="1,1027,825,2010,74,5994,4172"
-         currency="USD"
-         theme="dark"
-         transparent="false"
-         show-symbol-logo="true">
-    </div>
+    <div class="draw-container"></div>
+
+    <script>
+      const redrawElements = {
+        div: {
+          id: 'mainContainer',
+          class: 'coinmarketcap-currency-widget',
+          'data-currency': 'bitcoin',
+          'data-base': 'USD',
+          'data-secondary': '',
+          'data-ticker': 'true',
+          'data-rank': 'true',
+          'data-marketcap': 'true',
+          'data-volume': 'true',
+          'data-stats': 'USD',
+          'data-statsticker': 'true',
+        },
+        script: {
+          src: 'https://files.coinmarketcap.com/static/widget/currency.js',
+        },
+      };
+
+      const redrawContainer = document.querySelector('.draw-container');
+
+      function redraw() {
+        redrawContainer.innerHTML = '';
+
+        // Recreate div and script elements
+        Object.keys(redrawElements).forEach(tag => {
+          const el = document.createElement(tag);
+          Object.entries(redrawElements[tag]).forEach(([attr, val]) => {
+            el.setAttribute(attr, val);
+          });
+          redrawContainer.appendChild(el);
+        });
+      }
+
+      // Initial draw
+      redraw();
+      // Redraw every 10 seconds
+      setInterval(redraw, 10000);
+    </script>
   </body>
 </html>

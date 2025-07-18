@@ -1,62 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Auto-Refreshing CoinMarketCap Widget</title>
-    <style>
-      body {
-        background-color: #121212;
-        color: #ffffff;
-        font-family: sans-serif;
-        text-align: center;
-        padding: 2rem;
-      }
-    </style>
-  </head>
-  <body>
-    <h2>Live Bitcoin Stats (auto-refresh every 10s)</h2>
+const redrawElements = {
+  div: {
+    id: 'mainContainer',
+    'class': 'coinmarketcap-currency-widget',
+    'data-currency': 'bitcoin',
+    'data-base': 'ZAR',
+    'data-secondary': '',
+    'data-ticker': 'true',
+    'data-rank': 'true',
+    'data-marketcap': 'true',
+    'data-volume': 'true',
+    'data-stats': 'ZAR',
+    'data-statsticker': 'true',
+  },
+  script: {
+    src: 'https://files.coinmarketcap.com/static/widget/currency.js',
+  },
+}
+const redrawContainer = document.querySelector( '.draw-container' );
 
-    <div class="draw-container"></div>
-
-    <script>
-      const redrawElements = {
-        div: {
-          id: 'mainContainer',
-          class: 'coinmarketcap-currency-widget',
-          'data-currency': 'bitcoin',
-          'data-base': 'USD',
-          'data-secondary': '',
-          'data-ticker': 'true',
-          'data-rank': 'true',
-          'data-marketcap': 'true',
-          'data-volume': 'true',
-          'data-stats': 'USD',
-          'data-statsticker': 'true',
-        },
-        script: {
-          src: 'https://files.coinmarketcap.com/static/widget/currency.js',
-        },
-      };
-
-      const redrawContainer = document.querySelector('.draw-container');
-
-      function redraw() {
-        redrawContainer.innerHTML = '';
-
-        // Recreate div and script elements
-        Object.keys(redrawElements).forEach(tag => {
-          const el = document.createElement(tag);
-          Object.entries(redrawElements[tag]).forEach(([attr, val]) => {
-            el.setAttribute(attr, val);
-          });
-          redrawContainer.appendChild(el);
-        });
-      }
-
-      // Initial draw
-      redraw();
-      // Redraw every 10 seconds
-      setInterval(redraw, 10000);
-    </script>
-  </body>
-</html>
+function redraw() {
+  redrawContainer.innerHTML = '';
+  
+  // Recreate elements
+  Object.keys( redrawElements ).forEach( el => {
+    const domEl = document.createElement( el );
+    // Iterate over attributes
+    Object.keys( redrawElements[ el ] ).forEach( attr => {
+      domEl.setAttribute( attr, redrawElements[ el ][ attr ] );
+    } );
+    redrawContainer.appendChild( domEl );
+  } );
+}
+redraw();
+// Redraw every 10 seconds
+setInterval( redraw, 10000 );
